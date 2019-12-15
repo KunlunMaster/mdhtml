@@ -21,21 +21,17 @@ namespace mdht{
 		std::make_tuple("###### A ###", R"(^\s*#{6}\s+(.*?)(\s+#*)*\s*$)", "<h6>$1</h6>"),
 
 
-        std::make_tuple("_A_",R"((^|[^_])(_)([^_]+?)\2($|[^_]))","$1<em>$3</em>$4"),
+        std::make_tuple("_A_",R"((^|[^_])(_)([^_<>]+?)\2($|[^_]))","$1<em>$3</em>$4"),
         std::make_tuple("__A__",R"((^|[^_])(_{2})([^_]+?)\2($|[^_]))","$1<strong>$3</strong>$4"),
         std::make_tuple("___A___",R"((^|[^_])(_{3})([^_]+?)\2($|[^_]))","$1<i><strong>$3</strong></i>$4"),
 
         std::make_tuple("~~A~~",R"((^|[^~])(~{2})([^~]+?)\2($|[^~]))","$1<s>$3</s>$4"),
-        std::make_tuple("`<A>`",R"((^|[^`])(`{1,})([^`]*?)<([^`]+)>([^`]*?)\2($|[^`]))","$1<code>$3&lt;$4&gt;$5</code>$6"),
-        std::make_tuple("`<A`",R"((^|[^`])(`{1,})([^`]*?)<([^`]*)\2($|[^`]))","$1<code>$3&lt;$4</code>$5"),
-        std::make_tuple("`>A`",R"((^|[^`])(`{1,})([^`]*?)>([^`]*)\2($|[^`]))","$1<code>$3&gt;$4</code>$5"),
-        std::make_tuple("`A`",R"((^|[^`])(`{1,})([^`]+?)\2($|[^`]))","$1<code>$3</code>$4"),
-        std::make_tuple("[A](http://a.b.c)",R"((^|[^\[])\[([^\[]+?)\]\(([^\)]+?)\))","$1<a href=\"$3\">$2</a>")
 
     };
 	const std::string  html_head {"<!doctype html>\n"
-					"<html style='font-size:18px !important'>\n"
+					"<html style='font-size:14px !important'>\n"
 					"<head>\n"
+					"<link rel=\"stylesheet\" type=\"text/css\" href=\"default.css\">\n"
 					"<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>\n"
 					"</head>\n<body>\n"
 	};

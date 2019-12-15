@@ -17,7 +17,7 @@ int main() {
     cin>>fname;
 //	fname = "testfile/coreguid.md";
 	if(fname.size() == 1 && stoi(fname) < 10)
-			fname="testfile/test" + fname + ".md";
+			fname="md/test" + fname + ".md";
     MarkdownParser mdp;
     if(!mdp.parse(fname))
         return -1;

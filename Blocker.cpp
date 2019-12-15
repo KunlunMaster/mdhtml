@@ -95,7 +95,7 @@ std::shared_ptr<Blocker> DefaultBlock::recognizer(const std::string &text, std::
     else
         new_text = text;
 	//code 
-	if(curr->text().empty() && pos > 3)
+	if(curr != nullptr && curr->text().empty() && pos > 3)
 		return CodeBlock::new_code_block(m[1].str(), m[2].str(), curr);
 	
     shared_ptr<DefaultBlock> ret {new DefaultBlock(new_text,pos)};
@@ -271,6 +271,24 @@ bool CodeBlock::add_content(const std::string & text)
 	}
 	mtext += text.substr(mpos) + "\n";
 	return true;
+}
+string CodeBlock::convert_code_line(const std::string & source)
+{
+	string ret{""};
+	regex reg{R"(`(.*?)`)"};
+	smatch m;
+	auto b = source.cbegin();
+	auto e = source.cend();
+	string suffix {""};
+	while(regex_search(b,e,m,reg)){
+		ret += m.prefix().str() + "<code>";
+		ret += convert_code(m[1].str());
+		ret += "</code>";
+		suffix = m.suffix().str();
+		b = m[0].second;
+	}
+	ret += suffix;
+	return ret;
 }
 /*
    处理 < >  & 的转义 

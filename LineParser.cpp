@@ -16,11 +16,26 @@ mdht::LineParser::LineParser(const std::vector<idx_reg_fmt> &replace_list) {
         assert(!get<0>(x).empty() && get<0>(x)[0] > 0);
         mreplace[get<0>(x)[0]].emplace_back(get<1>(x), get<2>(x));
     }
+	//` AAA `
+	mreplace['`'].emplace_back("", CodeBlock::convert_code_line);
+	mreplace['['].emplace_back("", LineParser::link_parser);
+}
+
+string LineParser::link_parser(const string & line)
+{
+//       std::make_tuple("[A](http://a.b.c)",R"((^|[^\[])\[([^\[]+?)\]\(([^\)]+?)\))","$1<a href=\"$3\">$2</a>"),
+//       std::make_tuple("[![A](http://a.b.c \"title\")](http://b.c.d)", R"(\[!\[(.*?)\]\((.+?)(\s+\"(.*?)\")?\s*\)\s*\]\((.+?)\))","<a href=\"$4\"><img src=\"$2\" atl=\"$1\" title='$3'></a>"),
+	//1, ![alt](http://abc.com "title")
+	regex img_reg{R"(!\[(.*?)\]\((.+?)(\s+\"(.*?)\")?\s*\))"};
+	auto s = regex_replace(line, img_reg, "<img src=\"$2\" alt=\"$1\" title='$3' >");
+
+	regex link_reg{R"(\[(.*?)\]\((.*?)\))"};
+	return regex_replace(s, link_reg, "<a href='$2' >$1</a>");
 }
 
 string mdht::LineParser::parse_line(const string &line) const {
     string newline{line};
-    for(size_t i=0; i != newline.size(); ++i){
+    for(size_t i=0; i < newline.size(); ++i){
         unsigned char idx= static_cast<unsigned char>(newline[i]);
         if(mreplace[idx].empty())
             continue;
@@ -30,7 +45,7 @@ string mdht::LineParser::parse_line(const string &line) const {
                 tmpresult = regex_replace(tmpresult,regex(x.first),*y);
             else{
                 auto f = get<deal_regex_func>(x.second);
-                tmpresult = f(x.first);
+                tmpresult = f(tmpresult);
             }
         }
         if(newline == tmpresult)
@@ -65,7 +80,7 @@ bool mdht::MarkdownParser::output_html(const std::string &html_file) {
         result.push_back("\n");
     }
 	html << html_head;
-	html << html_style;
+//	html << html_style;
     for(auto x : result)
         html<<x;
 	html << html_end;

@@ -21,6 +21,7 @@ namespace  mdht {
     public:
         LineParser(const std::vector<idx_reg_fmt> &replace_list);
         std::string parse_line(const std::string & line)const;
+		static std::string link_parser(const std::string & line);
 
     private:
         reg_fmt_array mreplace;
