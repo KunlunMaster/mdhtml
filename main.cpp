@@ -11,13 +11,16 @@
 using namespace std;
 using namespace mdht;
 
-int main() {
+int main(int argc, char*argv[]) {
     string fname;
+	if(argc == 1){
     cout<<"pls input md file name:";
     cin>>fname;
-//	fname = "testfile/coreguid.md";
+	}
+	else 
+		fname = argv[1];
 	if(fname.size() == 1 && stoi(fname) < 10)
-			fname="md/test" + fname + ".md";
+		fname="md/test" + fname + ".md";
     MarkdownParser mdp;
     if(!mdp.parse(fname))
         return -1;

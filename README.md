@@ -15,14 +15,18 @@
 
 ## 使用方法
 方法很简单：
-```
-$: git clone git@github.com:KunlunMaster/mdhtml.git`
+```shell
+$: git clone https://github.com/KunlunMaster/mdhtml.git
 $: cd mdhtml
 $: make 
 $: ./test 
 ```
 
-## develop log( 开发日志 ）
+##  开发日志 
+### 2019.12.16
+
+- 完成task list 
+
 ### 2019.12.15
 
 - 完成图片链接识别。可以识别图片链接与链接的重合。

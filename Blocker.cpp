@@ -74,8 +74,8 @@ shared_ptr<HeaderBlock> HeaderBlock::recognizer(const string &text, shared_ptr<B
 	assert(m[1].length() > 0 && m[1].length() < 7);
    string pre="<h"+to_string(m[1].length())+">";
     string suf="</h"+to_string(m[1].length())+">";
-   if(m[1].length() == 2)
-		   suf += "<hr />";
+////   if(m[1].length() == 2)
+//		   suf += "<hr />";
     ret->set_token(make_pair(pre,suf));
     auto fp = find_father_brother(curr, ret->position(), ret->type());
     ret->set_father(fp.first);
@@ -173,11 +173,22 @@ std::shared_ptr<UlistBlock> UlistBlock::recognizer(const std::string &text, std:
 	smatch m;
     if(!regex_match(text,m, ul_reg))
         return nullptr;
-	string new_text { m[2].str()};
-    shared_ptr<UlistBlock> ret {new UlistBlock(new_text,m[1].length())};
-    auto fb = find_father_brother(curr, ret->position(),ret->type()); 
    string pre = m[1].str()+"<li>";
    string suf = "</li>";
+	string new_text { m[2].str()};
+	//for task list
+	smatch m2;
+	regex tk_reg{R"(\[([ xX])\] (.*?)\s*$)"};
+	if(regex_match(new_text, m2, tk_reg)){
+		string s = "<input disable=\"\" type=\"checkbox\" ";
+		if(m2[1].str()[0] != ' ')
+			s += " checked=\"\"";
+		s += ">" + m2[2].str();;
+		swap(new_text, s);
+	}
+	//----------
+    shared_ptr<UlistBlock> ret {new UlistBlock(new_text,m[1].length())};
+    auto fb = find_father_brother(curr, ret->position(),ret->type()); 
    if(fb.first == nullptr)
 		fb.first = ret;
    if(fb.second == nullptr || fb.second->type() != ret->type())
@@ -217,12 +228,13 @@ std::shared_ptr<OlistBlock> OlistBlock::recognizer(const std::string &text, std:
     return ret;
 }
 std::shared_ptr<CodeBlock> CodeBlock::new_code_block(const std::string & pretext, const std::string &text, std::shared_ptr<Blocker> curr) {
-	string new_text {text};
+	string new_text {""};
     shared_ptr<CodeBlock> ret {new CodeBlock(new_text,pretext.size())};
     auto fb = find_father_brother(curr, ret->position(),ret->type());
     string pre = pretext +"<pre><code>\n";
     string suf = pretext +  "</code></pre>";
 
+	ret->set_code_name(text);
     ret->set_father(fb.first);
     ret->set_brother(fb.second);
 
@@ -230,23 +242,12 @@ std::shared_ptr<CodeBlock> CodeBlock::new_code_block(const std::string & pretext
     return ret;
 }
 std::shared_ptr<CodeBlock> CodeBlock::recognizer(const std::string &text, std::shared_ptr<Blocker> curr) {
-    regex reg{R"(^( *)`{3}\s*(.*)$)"};
+    regex reg{R"(^( *)`{3}\s*(.*?)\s*$)"};
 	smatch m;
     if(!regex_match(text,m, reg))
         return nullptr;
-	return new_code_block(m[1].str(), m[2].str(), curr);
-/*	string new_text {""};
-    shared_ptr<CodeBlock> ret {new CodeBlock(new_text,m[1].length())};
-    auto fb = find_father_brother(curr, ret->position(),ret->type());
-    string pre = m[1].str()+"<pre><code>\n";
-    string suf = m[1].str() +  "</code></pre>";
-
-    ret->set_father(fb.first);
-    ret->set_brother(fb.second);
-
-   ret->set_token(make_pair(pre,suf));
-    return ret;
-*/}
+	return new_code_block(m[1].str(), m[2].str(),  curr);
+}
 void CodeBlock::get_result(std::list<std::string> & ret) 
 {    
 	ret.push_back(mtoken.first);

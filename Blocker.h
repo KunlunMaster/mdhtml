@@ -94,10 +94,12 @@ namespace mdht {
         virtual void get_result(std::list<std::string> & ret) override ;
 		bool add_content(const std::string & input_text);
 		bool is_end() { return mis_end; }
+		void set_code_name(const std::string & name){ mcode_name = name;}
 		static std::string convert_code_line(const std::string & source);
 		static std::shared_ptr<CodeBlock> new_code_block(const std::string & pretext, const std::string &text, std::shared_ptr<Blocker> curr);
 	private:
 		static std::string convert_code(const std::string & source);
+		std::string mcode_name;
 		bool mis_end{false};
 	};
 

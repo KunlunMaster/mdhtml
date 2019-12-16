@@ -7,11 +7,11 @@
 #include "LineParser.h"
 namespace mdht{
     const std::vector<idx_reg_fmt> regvect{
-        std::make_tuple("*A*",R"((^|[^\*])(\*)([^\*]+?)\2($|[^\*]))","$1<em>$3</em>$4"),
-        std::make_tuple("**A**",R"((^|[^\*])(\*{2})([^\*]+?)\2($|[^\*]))","$1<strong>$3</strong>$4"),
-        std::make_tuple("***A***",R"((^|[^\*])(\*{3})([^\*]+?)\2($|[^\*]))","$1<i><strong>$3</strong></i>$4"),
-		std::make_tuple("******", R"(^\*{3,}\s*$)", "<hr />"),
-		std::make_tuple("------", R"(^\-{3,}\s*$)", "<hr />"),
+        std::make_tuple("*A*",R"((^|[^\*])\*([^\*]+)\*($|[^\*]?))","$1<em>$2</em>$3"),
+        std::make_tuple("**A**",R"((^|[^\*])(\*{2})([^\*]+)\2($|[^\*]))","$1<strong>$3</strong>$4"),
+        std::make_tuple("***A***",R"((^|[^\*])(\*{3})([^\*]+)\2($|[^\*]))","$1<i><strong>$3</strong></i>$4"),
+		std::make_tuple("******", R"(^ {0,3}\*{3,}\s*$)", "<hr />"),
+		std::make_tuple("------", R"(^ {0,3}\-{3,}\s*$)", "<hr />"),
 
 		std::make_tuple("# A #", R"(^\s*#\s+(.*?)(\s+#*)*\s*$)", "<h1>$1</h1>"),
 		std::make_tuple("## A ##", R"(^\s*#{2}\s+(.*?)(\s+#*)*\s*$)", "<h2>$1</h2><hr />"),

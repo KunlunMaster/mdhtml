@@ -23,8 +23,6 @@ mdht::LineParser::LineParser(const std::vector<idx_reg_fmt> &replace_list) {
 
 string LineParser::link_parser(const string & line)
 {
-//       std::make_tuple("[A](http://a.b.c)",R"((^|[^\[])\[([^\[]+?)\]\(([^\)]+?)\))","$1<a href=\"$3\">$2</a>"),
-//       std::make_tuple("[![A](http://a.b.c \"title\")](http://b.c.d)", R"(\[!\[(.*?)\]\((.+?)(\s+\"(.*?)\")?\s*\)\s*\]\((.+?)\))","<a href=\"$4\"><img src=\"$2\" atl=\"$1\" title='$3'></a>"),
 	//1, ![alt](http://abc.com "title")
 	regex img_reg{R"(!\[(.*?)\]\((.+?)(\s+\"(.*?)\")?\s*\))"};
 	auto s = regex_replace(line, img_reg, "<img src=\"$2\" alt=\"$1\" title='$3' >");
@@ -32,6 +30,7 @@ string LineParser::link_parser(const string & line)
 	regex link_reg{R"(\[(.*?)\]\((.*?)\))"};
 	return regex_replace(s, link_reg, "<a href='$2' >$1</a>");
 }
+//LineParser:q
 
 string mdht::LineParser::parse_line(const string &line) const {
     string newline{line};
